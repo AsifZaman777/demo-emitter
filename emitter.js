@@ -16,6 +16,33 @@ app.stage.addChild(bunny);
 const speed = 5;
 var score=0;
 
+
+//scoreboard
+
+const demoContainer = new PIXI.Container();
+demoContainer.x = app.renderer.width - 300; 
+demoContainer.y = 20;
+app.stage.addChild(demoContainer);
+
+//bg rect
+const bgRect = new PIXI.Graphics();
+bgRect.beginFill(0x333333); 
+bgRect.drawRect(0, 0, 250, 100);
+bgRect.alpha=0.5 
+demoContainer.addChild(bgRect);
+
+// Create the text
+const text = new PIXI.Text('Score: '+score, {
+    fontFamily: 'Arial',
+    fontSize: 24,
+    fill: 0xFFFFFF, // Text color (white)
+    align: 'left'
+});
+text.anchor.set(0.8); 
+text.x = bgRect.width / 2; 
+text.y = bgRect.height / 2;
+demoContainer.addChild(text);
+
 // Set up a velocity vector for smoother movement
 const velocity = new PIXI.Point(0, 0);
 
@@ -102,17 +129,22 @@ function emitParticle(x, y) {
     targetObjects.forEach((targetObject) => {
       if (targetObject.containsPoint(particle.position)) {
         targetObject.y = -targetObject.height - 500;  
-        console.log(score++);
+        score++;
+        text.text='score :' + score;
+      }
+      else{
+        score=score+0;
+        text.text='score :' + score;
       }
       // Remove particle when it reaches the top border
-      else if (particle.y < 0) {
+      if (particle.y < 0) {
         app.stage.removeChild(particle);
       }
     });
   });
 }
 
-
+text.text='Score : '+score;
 
 const targetObjects = [];
 const objectSpeed = 2;
@@ -159,28 +191,4 @@ app.ticker.add((delta) => {
   });
 });
 
-//scoreboard
 
-const demoContainer = new PIXI.Container();
-demoContainer.x = app.renderer.width - 300; 
-demoContainer.y = 20;
-app.stage.addChild(demoContainer);
-
-//bg rect
-const bgRect = new PIXI.Graphics();
-bgRect.beginFill(0x333333); 
-bgRect.drawRect(0, 0, 250, 100);
-bgRect.alpha=0.5 
-demoContainer.addChild(bgRect);
-
-// Create the text
-const text = new PIXI.Text('Score: '+score, {
-    fontFamily: 'Arial',
-    fontSize: 24,
-    fill: 0xFFFFFF, // Text color (white)
-    align: 'left'
-});
-text.anchor.set(0.8); 
-text.x = bgRect.width / 2; 
-text.y = bgRect.height / 2;
-demoContainer.addChild(text);
