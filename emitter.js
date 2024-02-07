@@ -1,3 +1,6 @@
+const hitSound = new Audio('sounds/beep.wav');
+const over = new Audio('sounds/over.mp3');
+
 const app = new PIXI.Application({
   transparent:true,
   resizeTo: window,
@@ -59,11 +62,35 @@ app.ticker.add(() => {
 
 // Function to handle game over
 function gameOver() {
-  alert("Game over!");
   bunny.x = 1000;
   bunny.y = 700;
   velocity.set(0, 0);
   score=0; //score reset
+  over.play();
+
+const demoContainer = new PIXI.Container();
+demoContainer.x = 500; 
+demoContainer.y = 500;
+app.stage.addChild(demoContainer);
+
+//scoreboard bg rect
+
+
+// Create the text
+const text = new PIXI.Text('Game Over', {
+    fontFamily: 'Arial',
+    fontStyle:"bold",
+    fontSize: 100,
+    fill: 0xFFFFFF, // Text color (white)
+    align: 'left'
+});
+text.anchor.set(0.8); 
+text.x = bgRect.width / 2; 
+text.y = bgRect.height / 2;
+demoContainer.addChild(text);
+
+objectSpeed=0;
+
 }
 
 // Use PIXI ticker for continuous updates
@@ -135,6 +162,7 @@ function emitParticle(x, y) {
         targetObject.y = -targetObject.height - Math.random();  
         score++;
         text.text='Score : ' + score;
+        hitSound.play();
       }
       else{
         score=score+0;
@@ -150,9 +178,12 @@ function emitParticle(x, y) {
   text.text='Score: '+score;
 }
 
+
+
 const targetObjects = [];
-const objectSpeed = 10;
+const objectSpeed = 2;
 const totalTargetObjects = 10;
+
 
 
 function createTargetObject() {
