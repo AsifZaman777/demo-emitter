@@ -21,6 +21,23 @@ const speed = 5;
 // Set up a velocity vector for smoother movement
 const velocity = new PIXI.Point(0, 0);
 
+// Check for collisions between bunny and target objects
+app.ticker.add(() => {
+  targetObjects.forEach((targetObject) => {
+    if (targetObject.containsPoint(bunny.position)) {
+      gameOver();
+    }
+  });
+});
+
+// Function to handle game over
+function gameOver() {
+  alert("Game over!");
+  // Reset bunny position
+  bunny.x = 500;
+  bunny.y = 500;
+}
+
 // Use PIXI ticker for continuous updates
 app.ticker.add(() => {
   // Update bunny position based on velocity
@@ -63,92 +80,82 @@ document.addEventListener("keydown", (event) => {
       emitParticle(bunny.x, bunny.y);
       break;
     case "Enter":
-        velocity.set(0,0);
-        break;
+      velocity.set(0, 0);
+      break;
   }
 });
 
-
 function emitParticle(x, y) {
-    // Create a new particle
-    const particle = PIXI.Sprite.from("images/particle.png");
-    particle.scale.set(0.5);
-    particle.anchor.set(0.5);
-    particle.x = x;
-    particle.y = y;
-  
-    // Add the particle to the stage
-    app.stage.addChild(particle);
-  
-    // Update the particle's position in the game loop
-    app.ticker.add(() => {
-      // Move the particle upwards
-      particle.y -= 10;
-  
-      // Check for collision with target objects
-      targetObjects.forEach((targetObject) => {
-        if (targetObject.containsPoint(particle.position)) {
-          // Remove the target object from the stage
-          targetObject.y = -targetObject.height-500;
-        } 
-        // Remove particle when it reaches the top border
-     else if (particle.y < 0) {
+  // Create a new particle
+  const particle = PIXI.Sprite.from("images/particle.png");
+  particle.scale.set(0.5);
+  particle.anchor.set(0.5);
+  particle.x = x;
+  particle.y = y;
+
+  // Add the particle to the stage
+  app.stage.addChild(particle);
+
+  // Update the particle's position in the game loop
+  app.ticker.add(() => {
+    // Move the particle upwards
+    particle.y -= 10;
+
+    // Check for collision with target objects
+    targetObjects.forEach((targetObject) => {
+      if (targetObject.containsPoint(particle.position)) {
+        // Remove the target object from the stage
+        targetObject.y = -targetObject.height - 500;
+      }
+      // Remove particle when it reaches the top border
+      else if (particle.y < 0) {
         app.stage.removeChild(particle);
       }
-
-    //   if(targetObject.containsPoint(bunny.position))
-    //   {
-    //     alert("Gameover");
-    //   }
     });
-      });
-  
-     
-  }
-  
+  });
+}
 
 const targetObjects = [];
 const objectSpeed = 2;
 const totalTargetObjects = 10;
 
 function createTargetObject() {
-    const texture = PIXI.Texture.from('images/astroid.png');
-    const targetObject = new PIXI.Sprite(texture);
-    targetObject.scale.set(Math.random()*(0.3-0.2)+0.2);
-    app.stage.addChild(targetObject);
+  const texture = PIXI.Texture.from("images/astroid.png");
+  const targetObject = new PIXI.Sprite(texture);
+  targetObject.scale.set(Math.random() * (0.3 - 0.2) + 0.2);
+  app.stage.addChild(targetObject);
 
-    //set intial position of astroid
-    targetObject.x = Math.random() * app.renderer.width;
-    targetObject.y = -targetObject.height-500; // Start from above the screen
+  //set intial position of astroid
+  targetObject.x = Math.random() * app.renderer.width;
+  targetObject.y = -targetObject.height - 500; // Start from above the screen
 
-    // Add targetObject to the array
-    targetObjects.push(targetObject);
+  // Add targetObject to the array
+  targetObjects.push(targetObject);
 
-    //random delay before falling
-    targetObject.delay = Math.random() * 100;
-    
-    targetObject.elapsedTime = 0;
+  //random delay before falling
+  targetObject.delay = Math.random() * 100;
+  targetObject.elapsedTime = 0;
 }
 
 for (let i = 0; i < totalTargetObjects; i++) {
-    createTargetObject();
+  createTargetObject();
 }
 
 // Use PIXI ticker for continuous updates
 app.ticker.add((delta) => {
-    targetObjects.forEach((targetObject) => {
-        targetObject.elapsedTime += delta;
+  targetObjects.forEach((targetObject) => {
+    targetObject.elapsedTime += delta;
 
-        if (targetObject.elapsedTime >= targetObject.delay) {
-            targetObject.y += objectSpeed * delta / 1; // adjust falling time
-            //border logic
-            if (targetObject.y > app.renderer.height) {
-                targetObject.x = Math.random() * app.renderer.width;
-                targetObject.y = -targetObject.height;
-                //reset falling start time after the border touch
-                targetObject.elapsedTime = 0;
-                targetObject.delay = Math.random() * 1;
-            }
-        }
-    });
+    if (targetObject.elapsedTime >= targetObject.delay) {
+      targetObject.y += (objectSpeed * delta) / 1; // adjust falling time
+      //border logic
+      if (targetObject.y > app.renderer.height) {
+        targetObject.x = Math.random() * app.renderer.width;
+        targetObject.y = -targetObject.height;
+        //reset falling start time after the border touch
+        targetObject.elapsedTime = 0;
+        targetObject.delay = Math.random() * 1;
+      }
+    }
+  });
 });
