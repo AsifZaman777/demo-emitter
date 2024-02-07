@@ -31,8 +31,9 @@ bgRect.alpha=0.5;
 demoContainer.addChild(bgRect);
 
 // Create the text
-const text = new PIXI.Text('', {
+const text = new PIXI.Text('Sky smash', {
     fontFamily: 'Arial',
+    fontStyle:"bold",
     fontSize: 24,
     fill: 0xFFFFFF, // Text color (white)
     align: 'left'
@@ -41,6 +42,8 @@ text.anchor.set(0.8);
 text.x = bgRect.width / 2; 
 text.y = bgRect.height / 2;
 demoContainer.addChild(text);
+
+
 
 // Set up a velocity vector for smoother movement
 const velocity = new PIXI.Point(0, 0);
@@ -131,11 +134,11 @@ function emitParticle(x, y) {
         particle.y=undefined;
         targetObject.y = -targetObject.height - Math.random();  
         score++;
-        text.text='score :' + score;
+        text.text='Score : ' + score;
       }
       else{
         score=score+0;
-        text.text='score :' + score;
+        text.text='Score : ' + score;
       }
       // Remove particle when it reaches the top border
       if (particle.y == 0) {
@@ -147,24 +150,10 @@ function emitParticle(x, y) {
   text.text='Score: '+score;
 }
 
-
-
 const targetObjects = [];
-const objectSpeed = 2;
+const objectSpeed = 10;
 const totalTargetObjects = 10;
 
-if(score>20)
-{
-  objectSpeed=5;
-}
-else if(score>30)
-{
-  objectSpeed=10;
-}
-else if(score>50)
-{
-  objectSpeed=20;
-}
 
 function createTargetObject() {
   const texture = PIXI.Texture.from("images/astroid.png");
