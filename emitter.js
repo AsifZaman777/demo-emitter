@@ -1,15 +1,15 @@
 const app = new PIXI.Application({
-  backgroundColor: 0x1099bb,
+  transparent:true,
   resizeTo: window,
 });
 document.body.appendChild(app.view);
 
 // Add the bunny sprite
-const bunny = PIXI.Sprite.from("https://pixijs.com/assets/bunny.png");
-bunny.scale.set(1.5);
+const bunny = PIXI.Sprite.from("images/bunny.png");
+bunny.scale.set(0.5);
 bunny.anchor.set(0.5);
 bunny.x = 1000;
-bunny.y = 900;
+bunny.y = 700;
 app.stage.addChild(bunny);
 
 // Set the initial speed for bunny movement
@@ -18,21 +18,20 @@ var score=0;
 
 
 //scoreboard
-
 const demoContainer = new PIXI.Container();
 demoContainer.x = app.renderer.width - 300; 
 demoContainer.y = 20;
 app.stage.addChild(demoContainer);
 
-//bg rect
+//scoreboard bg rect
 const bgRect = new PIXI.Graphics();
 bgRect.beginFill(0x333333); 
 bgRect.drawRect(0, 0, 250, 100);
-bgRect.alpha=0.5 
+bgRect.alpha=0.5; 
 demoContainer.addChild(bgRect);
 
 // Create the text
-const text = new PIXI.Text('Score: '+score, {
+const text = new PIXI.Text('', {
     fontFamily: 'Arial',
     fontSize: 24,
     fill: 0xFFFFFF, // Text color (white)
@@ -59,8 +58,9 @@ app.ticker.add(() => {
 function gameOver() {
   alert("Game over!");
   bunny.x = 1000;
-  bunny.y = 900;
+  bunny.y = 700;
   velocity.set(0, 0);
+  score=0; //score reset
 }
 
 // Use PIXI ticker for continuous updates
@@ -128,7 +128,8 @@ function emitParticle(x, y) {
     // Check for collision with target objects
     targetObjects.forEach((targetObject) => {
       if (targetObject.containsPoint(particle.position)) {
-        targetObject.y = -targetObject.height - 500;  
+        particle.y=undefined;
+        targetObject.y = -targetObject.height - Math.random();  
         score++;
         text.text='score :' + score;
       }
@@ -137,24 +138,39 @@ function emitParticle(x, y) {
         text.text='score :' + score;
       }
       // Remove particle when it reaches the top border
-      if (particle.y < 0) {
+      if (particle.y == 0) {
         app.stage.removeChild(particle);
       }
     });
   });
+
+  text.text='Score: '+score;
 }
 
-text.text='Score : '+score;
+
 
 const targetObjects = [];
 const objectSpeed = 2;
 const totalTargetObjects = 10;
 
+if(score>20)
+{
+  objectSpeed=5;
+}
+else if(score>30)
+{
+  objectSpeed=10;
+}
+else if(score>50)
+{
+  objectSpeed=20;
+}
+
 function createTargetObject() {
   const texture = PIXI.Texture.from("images/astroid.png");
   const targetObject = new PIXI.Sprite(texture);
   targetObject.scale.set(Math.random() * (0.3 - 0.2) + 0.2);
-  app.stage.addChild(targetObject);
+  app.stage.addChild(targetObject);  
 
   //set intial position of astroid
   targetObject.x = Math.random() * app.renderer.width;
