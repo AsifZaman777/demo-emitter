@@ -1,6 +1,3 @@
-// emit.js
-// import * as particles from "@pixi/particle-emitter";
-
 const app = new PIXI.Application({
   backgroundColor: 0x1099bb,
   resizeTo: window,
@@ -11,12 +8,13 @@ document.body.appendChild(app.view);
 const bunny = PIXI.Sprite.from("https://pixijs.com/assets/bunny.png");
 bunny.scale.set(1.5);
 bunny.anchor.set(0.5);
-bunny.x = 500;
-bunny.y = 500;
+bunny.x = 1000;
+bunny.y = 900;
 app.stage.addChild(bunny);
 
 // Set the initial speed for bunny movement
 const speed = 5;
+var score=0;
 
 // Set up a velocity vector for smoother movement
 const velocity = new PIXI.Point(0, 0);
@@ -33,9 +31,9 @@ app.ticker.add(() => {
 // Function to handle game over
 function gameOver() {
   alert("Game over!");
-  // Reset bunny position
-  bunny.x = 500;
-  bunny.y = 500;
+  bunny.x = 1000;
+  bunny.y = 900;
+  velocity.set(0, 0);
 }
 
 // Use PIXI ticker for continuous updates
@@ -98,14 +96,13 @@ function emitParticle(x, y) {
 
   // Update the particle's position in the game loop
   app.ticker.add(() => {
-    // Move the particle upwards
     particle.y -= 10;
 
     // Check for collision with target objects
     targetObjects.forEach((targetObject) => {
       if (targetObject.containsPoint(particle.position)) {
-        // Remove the target object from the stage
-        targetObject.y = -targetObject.height - 500;
+        targetObject.y = -targetObject.height - 500;  
+        console.log(score++);
       }
       // Remove particle when it reaches the top border
       else if (particle.y < 0) {
@@ -114,6 +111,8 @@ function emitParticle(x, y) {
     });
   });
 }
+
+
 
 const targetObjects = [];
 const objectSpeed = 2;
@@ -159,3 +158,29 @@ app.ticker.add((delta) => {
     }
   });
 });
+
+//scoreboard
+
+const demoContainer = new PIXI.Container();
+demoContainer.x = app.renderer.width - 300; 
+demoContainer.y = 20;
+app.stage.addChild(demoContainer);
+
+//bg rect
+const bgRect = new PIXI.Graphics();
+bgRect.beginFill(0x333333); 
+bgRect.drawRect(0, 0, 250, 100);
+bgRect.alpha=0.5 
+demoContainer.addChild(bgRect);
+
+// Create the text
+const text = new PIXI.Text('Score: '+score, {
+    fontFamily: 'Arial',
+    fontSize: 24,
+    fill: 0xFFFFFF, // Text color (white)
+    align: 'left'
+});
+text.anchor.set(0.8); 
+text.x = bgRect.width / 2; 
+text.y = bgRect.height / 2;
+demoContainer.addChild(text);
