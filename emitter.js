@@ -126,6 +126,7 @@ function createTargetObject() {
 
     //random delay before falling
     targetObject.delay = Math.random() * 100;
+    
     targetObject.elapsedTime = 0;
 }
 
