@@ -73,8 +73,8 @@ function gameOver() {
   over.play();
 
 const gameOverContainer = new PIXI.Container();
-gameOverContainer.x = 450; 
-gameOverContainer.y = 250;
+gameOverContainer.x = app.renderer.width/2 -230; 
+gameOverContainer.y = app.renderer.height/2 -100;
 app.stage.addChild(gameOverContainer);
 
 //scoreboard bg rect
