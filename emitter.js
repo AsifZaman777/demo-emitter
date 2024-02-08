@@ -11,8 +11,8 @@ document.body.appendChild(app.view);
 const bunny = PIXI.Sprite.from("images/bunny.png");
 bunny.scale.set(0.5);
 bunny.anchor.set(0.5);
-bunny.x = 1000;
-bunny.y = 700;
+bunny.x = app.renderer.width/2;
+bunny.y = app.renderer.height/2+300;
 app.stage.addChild(bunny);
 
 // Set the initial speed for bunny movement
@@ -67,8 +67,8 @@ const velocity = new PIXI.Point(0, 0);
 
 // Function to handle game over
 function gameOver() {
-  bunny.x = 1000;
-  bunny.y = 700;
+  bunny.x = app.renderer.width/2;
+  bunny.y = app.renderer.height/2+300;
   velocity.set(0, 0);
   over.play();
 
