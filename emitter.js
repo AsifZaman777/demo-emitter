@@ -172,7 +172,7 @@ app.ticker.add(() => {
 function emitParticle(x, y) {
   // Create a new particle
   const particle = PIXI.Sprite.from("images/particle.png");
-  particle.scale.set(0.5);
+  particle.scale.set(0.4);
   particle.anchor.set(0.5);
   particle.x = x;
   particle.y = y;
@@ -217,22 +217,10 @@ const targetObjects = [];
 let objectSpeed = 10;
 const totalTargetObjects = 10;
 
-if(score>=0 && score<=10)
-{
-  objectSpeed=10;
-}
-else if(score>=11 && score<=20)
-{
-  objectSpeed=15;
-}
-else if(score>=21 && score<=30)
-{
-  objectSpeed=20;
-}
-
 
 
 function createTargetObject() {
+
   const texture = PIXI.Texture.from("images/astroid.png");
   const targetObject = new PIXI.Sprite(texture);
   targetObject.scale.set(Math.random() * (0.3 - 0.2) + 0.2);
@@ -256,6 +244,35 @@ for (let i = 0; i < totalTargetObjects; i++) {
 
 // Use PIXI ticker for continuous updates
 app.ticker.add((delta) => {
+
+  //speed logic to make game more harder 
+  if(score>=0 && score<=10){
+    objectSpeed=10;
+  }
+  else if(score>=11 && score<=15)
+  {
+    objectSpeed=13;
+  }
+  else if(score>=16 && score<=20)
+  {
+    objectSpeed=15;
+  }
+  else if(score>=21 && score<=25)
+  {
+    objectSpeed=18;
+  }
+  else if(score>=26 && score<=30)
+  {
+    objectSpeed=22;
+  }
+  else if(score>=31 && score<=40)
+  {
+    objectSpeed=25;
+  }
+  else{
+    objectSpeed=27;
+  }
+ 
   targetObjects.forEach((targetObject) => {
     targetObject.elapsedTime += delta;
 
