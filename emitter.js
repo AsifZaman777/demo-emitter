@@ -18,7 +18,7 @@ app.stage.addChild(bunny);
 // Set the initial speed for bunny movement
 const speed = 5;
 var score=0;
-
+var gameOverState=false;
 
 //scoreboard
 const demoContainer = new PIXI.Container();
@@ -34,7 +34,7 @@ bgRect.alpha=0.5;
 demoContainer.addChild(bgRect);
 
 // Create the text
-const text = new PIXI.Text('Sky smash', {
+let text = new PIXI.Text('Sky smash', {
     fontFamily: 'Arial',
     fontStyle:"bold",
     fontSize: 24,
@@ -52,44 +52,72 @@ demoContainer.addChild(text);
 const velocity = new PIXI.Point(0, 0);
 
 // Check for collisions between bunny and target objects
-app.ticker.add(() => {
+
+
+  app.ticker.add(() => {
   targetObjects.forEach((targetObject) => {
     if (targetObject.containsPoint(bunny.position)) {
-      gameOver();
+      gameOverState===false ? gameOver(): console.log();
     }
+
   });
 });
+
+
 
 // Function to handle game over
 function gameOver() {
   bunny.x = 1000;
   bunny.y = 700;
   velocity.set(0, 0);
-  score=0; //score reset
   over.play();
 
-const demoContainer = new PIXI.Container();
-demoContainer.x = 500; 
-demoContainer.y = 500;
-app.stage.addChild(demoContainer);
+const gameOverContainer = new PIXI.Container();
+gameOverContainer.x = 450; 
+gameOverContainer.y = 250;
+app.stage.addChild(gameOverContainer);
 
 //scoreboard bg rect
-
+const gameOverbgRect = new PIXI.Graphics();
+gameOverbgRect.beginFill(0x333333); 
+gameOverbgRect.drawRect(0, 0, 550, 300);
+gameOverbgRect.alpha=0.5; 
+gameOverContainer.addChild(gameOverbgRect);
 
 // Create the text
-const text = new PIXI.Text('Game Over', {
+const gameOverText = new PIXI.Text('Game Over', {
     fontFamily: 'Arial',
     fontStyle:"bold",
     fontSize: 100,
     fill: 0xFFFFFF, // Text color (white)
     align: 'left'
 });
-text.anchor.set(0.8); 
-text.x = bgRect.width / 2; 
-text.y = bgRect.height / 2;
-demoContainer.addChild(text);
 
-objectSpeed=0;
+const totalScore = new PIXI.Text('Total Score : '+score, {
+  fontFamily: 'Arial',
+  fontStyle:"normal",
+  fontSize: 60,
+  fill: 0xFFFFFF, // Text color (white)
+  align: 'center'
+});
+
+gameOverText.anchor.set(0.5); 
+gameOverText.x = gameOverbgRect.width / 2; 
+gameOverText.y = gameOverbgRect.height / 2-100;
+
+totalScore.anchor.set(0.5); 
+totalScore.x = gameOverbgRect.width / 2; 
+totalScore.y = gameOverbgRect.height / 2;
+gameOverContainer.addChild(gameOverText);
+gameOverContainer.addChild(totalScore);
+
+
+
+//reset logics
+
+score=0;
+gameOverState=true;
+
 
 }
 
@@ -113,7 +141,8 @@ app.ticker.add(() => {
 });
 
 // Handle keyboard input
-document.addEventListener("keydown", (event) => {
+
+  document.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "w":
       velocity.x = 0;
@@ -156,7 +185,9 @@ function emitParticle(x, y) {
     particle.y -= 10;
 
     // Check for collision with target objects
-    targetObjects.forEach((targetObject) => {
+    if(gameOverState===false)
+    {
+      targetObjects.forEach((targetObject) => {
       if (targetObject.containsPoint(particle.position)) {
         particle.y=undefined;
         targetObject.y = -targetObject.height - Math.random();  
@@ -173,6 +204,8 @@ function emitParticle(x, y) {
         app.stage.removeChild(particle);
       }
     });
+    }
+    
   });
 
   text.text='Score: '+score;
@@ -181,8 +214,21 @@ function emitParticle(x, y) {
 
 
 const targetObjects = [];
-const objectSpeed = 2;
+let objectSpeed = 10;
 const totalTargetObjects = 10;
+
+if(score>=0 && score<=10)
+{
+  objectSpeed=10;
+}
+else if(score>=11 && score<=20)
+{
+  objectSpeed=15;
+}
+else if(score>=21 && score<=30)
+{
+  objectSpeed=20;
+}
 
 
 
