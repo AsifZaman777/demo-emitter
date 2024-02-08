@@ -182,7 +182,7 @@ function emitParticle(x, y) {
 
   // Update the particle's position in the game loop
   app.ticker.add(() => {
-    particle.y -= 10;
+    particle.y -= 20;
 
     // Check for collision with target objects
     if(gameOverState===false)
