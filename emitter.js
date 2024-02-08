@@ -101,6 +101,33 @@ const totalScore = new PIXI.Text('Total Score : '+score, {
   align: 'center'
 });
 
+
+//button create to reset the window
+const resetButton = new PIXI.Graphics();
+resetButton.beginFill(0xFFFFFF);
+resetButton.drawRoundedRect(0, 0, 100, 50, 15);
+resetButton.endFill();
+resetButton.x=gameOverContainer.width/2-50;
+resetButton.y=gameOverContainer.height/2+70;
+
+//button text
+const buttonText = new PIXI.Text('Restart', {
+  fontFamily: 'Arial',
+  fontSize: 20,
+  fill: 0x000000, // Black color
+});
+
+buttonText.anchor.set(0.5);
+buttonText.x = resetButton.width / 2;
+buttonText.y = resetButton.height / 2;
+resetButton.addChild(buttonText);
+
+resetButton.interactive = true;
+resetButton.buttonMode = true;
+resetButton.on('pointerdown', () => {
+  location.reload(); 
+});
+
 gameOverText.anchor.set(0.5); 
 gameOverText.x = gameOverbgRect.width / 2; 
 gameOverText.y = gameOverbgRect.height / 2-100;
@@ -110,11 +137,12 @@ totalScore.x = gameOverbgRect.width / 2;
 totalScore.y = gameOverbgRect.height / 2;
 gameOverContainer.addChild(gameOverText);
 gameOverContainer.addChild(totalScore);
+gameOverContainer.addChild(resetButton);
 
 
 
-//reset logics
 
+//gameover logics to reset
 score=0;
 gameOverState=true;
 
