@@ -7,7 +7,7 @@ const app = new PIXI.Application({
 });
 document.body.appendChild(app.view);
 
-// Add the bunny sprite
+// Add the rocket sprite
 const bunny = PIXI.Sprite.from("images/bunny.png");
 bunny.scale.set(0.5);
 bunny.anchor.set(0.5);
@@ -15,12 +15,12 @@ bunny.x = app.renderer.width/2;
 bunny.y = app.renderer.height/2+300;
 app.stage.addChild(bunny);
 
-// Set the initial speed for bunny movement
+// Set the initial speed for rocket movement and gameOverState init
 const speed = 5;
 var score=0;
 var gameOverState=false;
 
-//scoreboard
+//scoreboard text and transparent bg
 const demoContainer = new PIXI.Container();
 demoContainer.x = app.renderer.width - 300; 
 demoContainer.y = 20;
@@ -52,8 +52,6 @@ demoContainer.addChild(text);
 const velocity = new PIXI.Point(0, 0);
 
 // Check for collisions between bunny and target objects
-
-
   app.ticker.add(() => {
   targetObjects.forEach((targetObject) => {
     if (targetObject.containsPoint(bunny.position)) {
@@ -65,7 +63,10 @@ const velocity = new PIXI.Point(0, 0);
 
 
 
-// Function to handle game over
+/*Function to handle game over
+gameOverState change,
+total score count and execute.
+*/
 function gameOver() {
   bunny.x = app.renderer.width/2;
   bunny.y = app.renderer.height/2+300;
@@ -149,7 +150,7 @@ gameOverState=true;
 
 }
 
-// Use PIXI ticker for continuous updates
+// border logic for rocket 
 app.ticker.add(() => {
   // Update bunny position based on velocity
   bunny.x += velocity.x;
@@ -168,8 +169,7 @@ app.ticker.add(() => {
   }
 });
 
-// Handle keyboard input
-
+// Handle keyboard input to move rocket and fire
   document.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "w":
@@ -197,8 +197,8 @@ app.ticker.add(() => {
   }
 });
 
+// fire create and fire logic and collision check 
 function emitParticle(x, y) {
-  // Create a new particle
   const particle = PIXI.Sprite.from("images/particle.png");
   particle.scale.set(0.4);
   particle.anchor.set(0.5);
@@ -241,11 +241,11 @@ function emitParticle(x, y) {
 
 
 
+
+// target object setup and free fall logic
 const targetObjects = [];
 let objectSpeed = 10;
 const totalTargetObjects = 10;
-
-
 
 function createTargetObject() {
 
@@ -265,6 +265,8 @@ function createTargetObject() {
   targetObject.delay = Math.random() * 100;
   targetObject.elapsedTime = 0;
 }
+
+
 
 for (let i = 0; i < totalTargetObjects; i++) {
   createTargetObject();
